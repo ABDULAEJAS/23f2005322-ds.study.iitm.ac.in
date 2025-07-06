@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Book Slot - A2 PARKING</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      text-align: center;
+    }
+    input, select {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      width: 250px;
+    }
+    input[type="submit"] {
+      background-color: red;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+    h1 {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Book Your Parking Slot</h1>
+
+  <form method="POST">
+    <input type="text" name="vehicle" placeholder="Vehicle Number" required><br>
+
+    <label for="slot">Select Slot:</label><br>
+    <select name="slot" required>
+      {% for i in range(1, total_slots + 1) %}
+        <option value="{{ i }}">Slot {{ i }}</option>
+      {% endfor %}
+    </select><br>
+
+    <label for="start">Start Time:</label><br>
+    <input type="datetime-local" name="start" required><br>
+
+    <label for="end">End Time:</label><br>
+    <input type="datetime-local" name="end" required><br>
+
+    <input type="submit" value="Continue to Payment">
+  </form>
+
+  <br>
+  <a href="/logout" style="color: red;">Logout</a>
+</body>
+</html>

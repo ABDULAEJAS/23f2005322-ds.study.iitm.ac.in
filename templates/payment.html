@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payment</title>
+</head>
+<body style="background-color:black; color:white; font-family:Arial; text-align:center;">
+  <h1>A2 PARKING SERVICE</h1>
+  <h2>Payment Summary</h2>
+
+  {% if vehicle %}
+    <p><strong>Vehicle:</strong> {{ vehicle }}</p>
+    <p><strong>Slot:</strong> {{ slot }}</p>
+    <p><strong>Start:</strong> {{ start }}</p>
+    <p><strong>End:</strong> {{ end }}</p>
+    <p><strong>Hours:</strong> {{ hours }}</p>
+    <p><strong>Total:</strong> ₹{{ amount }}</p>
+
+    <form method="POST">
+      <button type="submit" style="padding:10px 20px; background:red; color:white; border:none; border-radius:5px;">
+        ✅ Confirm & Pay
+      </button>
+    </form>
+  {% else %}
+    <p style="color:red;">Missing booking data. <a href="/book" style="color:red;">Go Back</a></p>
+  {% endif %}
+</body>
+</html>

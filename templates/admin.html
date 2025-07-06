@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - A2 Parking</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: red;
+            text-align: center;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        input[type="number"] {
+            padding: 8px;
+            font-size: 16px;
+            width: 100px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid red;
+            text-align: center;
+        }
+
+        th {
+            background-color: darkred;
+            color: white;
+        }
+
+        .logout {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .total-revenue {
+            color: lime;
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🅿️ A2 PARKING ADMIN DASHBOARD</h1>
+
+    <h2>Change Total Number of Slots</h2>
+    <form method="POST">
+        <label for="total_slots">Slots:</label>
+        <input type="number" name="total_slots" value="{{ total_slots }}" min="1" required>
+        <input type="submit" value="Update">
+    </form>
+
+    <div class="total-revenue">
+        💰 Total Revenue Collected: ₹{{ total_revenue }}
+    </div>
+
+    <h2>📋 All Bookings</h2>
+    <table>
+        <tr>
+            <th>Vehicle</th>
+            <th>Slot</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+        </tr>
+        {% for b in bookings %}
+        <tr>
+            <td>{{ b[0] }}</td>
+            <td>{{ b[1] }}</td>
+            <td>{{ b[2] }}</td>
+            <td>{{ b[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>💸 Payment Summary</h2>
+    <table>
+        <tr>
+            <th>Vehicle</th>
+            <th>Amount Paid (₹)</th>
+            <th>Paid On</th>
+        </tr>
+        {% for p in payments %}
+        <tr>
+            <td>{{ p[0] }}</td>
+            <td>{{ p[1] }}</td>
+            <td>{{ p[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a class="logout" href="/logout">🚪 Logout</a>
+</body>
+</html>
