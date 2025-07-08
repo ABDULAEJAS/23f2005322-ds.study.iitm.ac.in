@@ -7,10 +7,19 @@
             background-color: #111;
             color: #fff;
             font-family: Arial, sans-serif;
-            padding: 30px;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
         h2 {
             color: red;
+            margin-bottom: 20px;
         }
         form {
             background-color: #222;
@@ -46,17 +55,28 @@
         a:hover {
             text-decoration: underline;
         }
+        .logo {
+            width: 100px;
+            height: auto;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
-    <h2>Sign Up</h2>
-    <form method="POST" action="/signup">
-        <input type="text" name="name" placeholder="Name" required><br><br>
-        <input type="email" name="email" placeholder="Email" required><br><br>
-        <input type="password" name="password" placeholder="Password" required><br><br>
-        <input type="submit" value="Register">
-    </form>
+    <div class="container">
+        <img src="{{ url_for('static', filename='logo.png.jpeg') }}" alt="Logo" class="logo">
+        
 
-    <p>Already have an account? <a href="/signin">Sign In</a></p>
+        <h2>Sign Up</h2>
+
+        <form method="POST" action="/signup">
+            <input type="text" name="name" placeholder="Name" required><br>
+            <input type="email" name="email" placeholder="Email" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <input type="submit" value="Register">
+        </form>
+
+        <p>Already have an account? <a href="/signin">Sign In</a></p>
+    </div>
 </body>
 </html>
