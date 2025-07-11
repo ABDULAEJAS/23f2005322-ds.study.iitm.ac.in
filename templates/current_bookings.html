@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Current Bookings</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+        h1 {
+            color: #e50914;
+        }
+        select, button {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        table {
+            width: 400px;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e50914;
+        }
+        th {
+            background-color: #1f1f1f;
+        }
+        .booked {
+            color: red;
+            font-weight: bold;
+        }
+        .vacant {
+            color: lightgreen;
+            font-weight: bold;
+        }
+    </style>
+    <img src="{{ url_for('static', filename='logo.png.jpeg') }}" alt="Logo" style="width: 100px; height: 80">
+</div>
+</head>
+<body>
+    <h1>📋 Current Slot Status</h1>
+    <form method="POST">
+        <label>Select City:</label>
+        <select name="city" required>
+            <option value="">-- Choose City --</option>
+            {% for city in cities %}
+                <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>{{ city }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Check</button>
+    </form>
+
+    {% if selected_city %}
+    <h3>Showing status for: <u>{{ selected_city }}</u></h3>
+    <table>
+        <tr>
+            <th>Slot Number</th>
+            <th>Status</th>
+        </tr>
+        {% for slot, status in slots_status %}
+        <tr>
+            <td>{{ slot }}</td>
+            <td class="{{ status | lower }}">{{ status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    <a href="/admin" style="color: red; text-decoration: none;">⬅ Back to Dashboard</a>
+</body>
+</html>

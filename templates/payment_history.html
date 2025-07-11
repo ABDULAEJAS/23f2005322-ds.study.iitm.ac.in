@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payment History</title>
+  <style>
+    body {
+      background-color: #0c0c0c;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+    h2 {
+      color: green;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #555;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #1a1a1a;
+    }
+  </style>
+  <img src="{{ url_for('static', filename='logo.png.jpeg') }}" alt="Logo" style="width: 100px; height: 80">
+</div>
+</head>
+<body>
+
+  <h2>💳 Payment History</h2>
+
+  <table>
+    <tr>
+      <th>S.No</th>
+      <th>City</th>
+      <th>Vehicle</th>
+      <th>Amount</th>
+      <th>Date</th>
+      <th>User Mail</th>
+    </tr>
+    {% for p in payments %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ p[0] }}</td>
+      <td>{{ p[1] }}</td>
+      <td>₹{{ p[2] }}</td>
+      <td>{{ p[3] }}</td>
+      <td>{{ p[4] if p|length > 4 else "N/A" }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <a href="/admin" style="color: red; text-decoration: none;">⬅ Back to Dashboard</a>
+
+
+</body>
+</html>

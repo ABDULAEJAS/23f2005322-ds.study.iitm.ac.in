@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Revenue Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      text-align: center;
+    }
+    canvas {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    h1 {
+      color: #e50914;
+    }
+  </style>
+  <img src="{{ url_for('static', filename='logo.png.jpeg') }}" alt="Logo" style="width: 100px; height: 80">
+</div>
+</head>
+<body>
+  <h1>📊 Revenue Per City</h1>
+  <canvas id="revenueChart" width="600" height="300"></canvas>
+
+  <script>
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|tojson }},
+        datasets: [{
+          label: 'Revenue (₹)',
+          data: {{ values|tojson }},
+          backgroundColor: 'rgba(229, 9, 20, 0.8)',
+          borderColor: 'rgba(229, 9, 20, 1)',
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: {
+              color: 'white'
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: 'white'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: 'white'
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>  
+  <a href="/admin" style="color: red; text-decoration: none;">⬅ Back to Dashboard</a>
+</body>
+</html>

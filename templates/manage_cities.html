@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Cities</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+        h1 {
+            color: #e50914;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+        }
+        button {
+            background-color: #e50914;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #b2060f;
+        }
+        .city-list {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        .back-link {
+            color: #e50914;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            color: white;
+        }
+    </style>
+    <img src="{{ url_for('static', filename='logo.png.jpeg') }}" alt="Logo" style="width: 100px; height: 80">
+</div>
+</head>
+<body>
+    <h1>🏙 Manage Cities & Slots</h1>
+
+    <!-- Add City -->
+    <form method="POST">
+        <input type="text" name="new_city" placeholder="Enter new city name" required>
+        <button type="submit" name="add_city">➕ Add City</button>
+    </form>
+
+    <!-- Delete City -->
+    <form method="POST">
+        <select name="del_city" required>
+            <option value="" disabled selected>Select city to delete</option>
+            {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" name="del_city">❌ Delete City</button>
+    </form>
+
+    <!-- Update Slot for City -->
+    <form method="POST">
+        <select name="slot_city" required>
+            <option value="" disabled selected>Select city to update slots</option>
+            {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+            {% endfor %}
+        </select>
+        <input type="number" name="slot_count" placeholder="No. of Slots" min="1" required>
+        <button type="submit" name="update_slot">🔄 Update Slots</button>
+    </form>
+
+    <!-- Display Slot Info -->
+    <div class="city-list">
+        <h2>📋 City-wise Slot Availability</h2>
+        <ul>
+            {% for city, count in slot_data.items() %}
+                <li><strong>{{ city }}</strong>: {{ count }} slots</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <br>
+    <a href="/admin" class="back-link">⬅ Back to Dashboard</a>
+</body>
+</html>

@@ -1,27 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Payment</title>
+  <meta charset="UTF-8">
+  <title>Payment Page</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #e50914;
+      margin-bottom: 30px;
+    }
+
+    .payment-box {
+      background-color: #1e1e1e;
+      padding: 30px;
+      border-radius: 12px;
+      width: 400px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+
+    .row {
+      margin: 15px 0;
+    }
+
+    .label {
+      color: #bbb;
+      font-size: 15px;
+    }
+
+    .value {
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .highlight {
+      color: #00ff00;
+      font-size: 22px;
+    }
+
+    .error {
+      color: red;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    form {
+      margin-top: 30px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #e50914;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff3c3c;
+    }
+  </style>
 </head>
-<body style="background-color:black; color:white; font-family:Arial; text-align:center;">
-  <h1>A2 PARKING SERVICE</h1>
-  <h2>Payment Summary</h2>
+<body>
+  <h1>💳 Payment Details</h1>
 
-  {% if vehicle %}
-    <p><strong>Vehicle:</strong> {{ vehicle }}</p>
-    <p><strong>Slot:</strong> {{ slot }}</p>
-    <p><strong>Start:</strong> {{ start }}</p>
-    <p><strong>End:</strong> {{ end }}</p>
-    <p><strong>Hours:</strong> {{ hours }}</p>
-    <p><strong>Total:</strong> ₹{{ amount }}</p>
+  <div class="payment-box">
+    <div class="row">
+      <span class="label">City:</span> <span class="value">{{ city }}</span>
+    </div>
+    <div class="row">
+      <span class="label">Vehicle:</span> <span class="value">{{ vehicle }}</span>
+    </div>
+    <div class="row">
+      <span class="label">Slot No:</span> <span class="value">{{ slot }}</span>
+    </div>
+    <div class="row">
+      <span class="label">Start Time:</span> <span class="value">{{ start }}</span>
+    </div>
+    <div class="row">
+      <span class="label">End Time:</span> <span class="value">{{ end }}</span>
+    </div>
+    <div class="row">
+      <span class="label">Duration:</span> <span class="value">{{ hours }} hour(s)</span>
+    </div>
+    <div class="row">
+      <span class="label">Amount:</span> <span class="highlight">₹{{ amount }}</span>
+    </div>
 
-    <form method="POST">
-      <button type="submit" style="padding:10px 20px; background:red; color:white; border:none; border-radius:5px;">
-        ✅ Confirm & Pay
-      </button>
+    <form method="post">
+      <button type="submit">✅ Confirm Booking & Pay</button>
     </form>
-  {% else %}
-    <p style="color:red;">Missing booking data. <a href="/book" style="color:red;">Go Back</a></p>
+  </div>
+
+  {% if conflict %}
+    <div class="error">⚠ Slot already booked during this time.</div>
   {% endif %}
 </body>
 </html>
