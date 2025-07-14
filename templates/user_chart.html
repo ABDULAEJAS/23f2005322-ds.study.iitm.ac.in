@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Booking Payments Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: red;
+      font-size: 32px;
+      margin-bottom: 30px;
+    }
+    canvas {
+      background-color: #222;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    a {
+      color: red;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 30px;
+      font-size: 18px;
+    }
+  </style>
+    <img src="{{ url_for('static', filename='logo.png.jpeg') }}" alt="Logo" style="width: 100px; height: 80">
+</head>
+<body>
+  <h1>Your Payments Per City</h1>
+  <canvas id="userChart" width="600" height="300"></canvas>
+  <script>
+    const ctx = document.getElementById('userChart').getContext('2d');
+    const userChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|tojson }},
+        datasets: [{
+          label: 'Total Paid (₹)',
+          data: {{ values|tojson }},
+          backgroundColor: 'rgba(229, 9, 20, 0.8)',
+          borderColor: 'rgba(229, 9, 20, 1)',
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: {
+              color: 'white'
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: 'white'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: 'white'
+            }
+          }
+        }
+      }
+    });
+  </script>
+  <a href="/user">⬅ Back to Dashboard</a>
+</body>
+</html>

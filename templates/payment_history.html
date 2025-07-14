@@ -32,6 +32,15 @@
 <body>
 
   <h2>💳 Payment History</h2>
+  <form method="get">
+  <label for="city">Select City:</label>
+  <select name="city" id="city" onchange="this.form.submit()">
+    <option value="">All Cities</option>
+    {% for city in cities %}
+      <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>{{ city }}</option>
+    {% endfor %}
+  </select>
+</form>
 
   <table>
     <tr>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User History</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      color: #e50914;
+      margin-top: 40px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      margin-bottom: 30px;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #1e1e1e;
+    }
+    a {
+      color: #e50914;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+    <img src="{{ url_for('static', filename='logo.png.jpeg') }}" alt="Logo" style="width: 100px; height: 80">
+</head>
+<body>
+
+  <h1>📑 User Booking & Payment History</h1>
+
+  <h2>🅱 Booking History</h2>
+  {% if bookings %}
+  <table>
+    <tr>
+      <th>S.No</th>
+      <th>City</th>
+      <th>Vehicle</th>
+      <th>Slot</th>
+      <th>Start</th>
+      <th>End</th>
+    </tr>
+    {% for b in bookings %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ b[0] }}</td>
+      <td>{{ b[1] }}</td>
+      <td>{{ b[2] }}</td>
+      <td>{{ b[3] }}</td>
+      <td>{{ b[4] }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p>No bookings yet.</p>
+  {% endif %}
+
+  <h2>💳 Payment History</h2>
+  {% if payments %}
+  <table>
+    <tr>
+      <th>S.No</th>
+      <th>City</th>
+      <th>Vehicle</th>
+      <th>Amount (₹)</th>
+      <th>Paid On</th>
+    </tr>
+    {% for p in payments %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ p[0] }}</td>
+      <td>{{ p[1] }}</td>
+      <td>{{ p[2] }}</td>
+      <td>{{ p[3] }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p>No payments yet.</p>
+  {% endif %}
+
+  <a href="/user">← Back to Dashboard</a>
+
+</body>
+</html>

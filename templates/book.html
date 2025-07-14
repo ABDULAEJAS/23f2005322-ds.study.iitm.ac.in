@@ -50,7 +50,6 @@
     }
   </style>
   <img src="{{ url_for('static', filename='logo.png.jpeg') }}" alt="Logo" style="width: 100px; height: 80">
-</div>
 </head>
 <body>
 
@@ -59,7 +58,7 @@
   {% if cities %}
   <form method="POST">
     <label for="city">Select City:</label><br>
-    <select name="city" required>
+    <select name="city" id="city" required>
       <option value="" disabled selected>Select city</option>
       {% for city in cities %}
         <option value="{{ city }}">{{ city }}</option>
@@ -68,15 +67,11 @@
 
     <input type="text" name="vehicle" placeholder="Vehicle Number" required><br>
     
-
-   <label for="slot">Select Slot:</label><br>
-<select name="slot" id="slot" required>
-  {% for i in range(1, total_slots + 1) %}
-    <option value="{{ i }}">Slot {{ i }}</option>
-  {% endfor %}
-</select>
-  
-<br>
+    <label for="slot">Select Slot:</label><br>
+    <select name="slot" id="slot" required>
+      <!-- Slot options will be populated by JS -->
+    </select>
+    <br>
 
     <label for="start">Start Time:</label><br>
     <input type="datetime-local" name="start" required><br>
@@ -89,6 +84,38 @@
   {% else %}
     <div class="error">No cities available. Admin should add cities.</div>
   {% endif %}
+<a href="/user">← Back to Dashboard</a>
 
-</body>
-</html>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var citySelect = document.getElementById('city');
+  var slotSelect = document.getElementById('slot');
+
+  function updateSlots(city) {
+    if (!city) {
+      slotSelect.innerHTML = '';
+      return;
+    }
+    fetch('/get_slots?city=' + encodeURIComponent(city))
+      .then(response => response.json())
+      .then(data => {
+        slotSelect.innerHTML = '';
+        data.available_slots.forEach(function(slot) {
+          let option = document.createElement('option');
+          option.value = slot;
+          option.text = 'Slot ' + slot;
+          slotSelect.appendChild(option);
+        });
+      });
+  }
+
+  citySelect.addEventListener('change', function() {
+    updateSlots(this.value);
+  });
+
+  // Optionally, populate slots for the initially selected city
+  if (citySelect.value) {
+    updateSlots(citySelect.value);
+  }
+});
+</script>

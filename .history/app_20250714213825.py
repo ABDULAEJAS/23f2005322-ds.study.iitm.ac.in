@@ -186,8 +186,8 @@ def book_slot_redirect():
 @app.route('/about')
 def about():
     if 'email' not in session or session['email'] == 'owner@gmail.com':
-        return redirect('/signin')
-    return render_template('about.html')
+      return redirect('/signin')
+    return render_template('about.html')    
 
 @app.route('/book', methods=['GET', 'POST'])
 def book():

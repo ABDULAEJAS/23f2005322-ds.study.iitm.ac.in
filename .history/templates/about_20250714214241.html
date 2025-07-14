@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Parking Management System</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+        }
+        h1 {
+            color: #ff3c3c;
+            text-align: center;
+        }
+        h2 {
+            color: #ff3c3c;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        p, li {
+            line-height: 1.6;
+        }
+        ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        .credit {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #888;
+        }
+        .credit strong {
+            color: #ff3c3c;
+        }
+    </style>
+      <img src="{{ url_for('static', filename='logo.png.jpeg') }}" alt="Logo" style="width: 100px; height: 80">
+</head>
+<body>
+
+<div class="container">
+    <h1>About the Parking Management System</h1>
+
+    <p>
+        The <strong>Parking Management System</strong> is a smart web-based platform developed to streamline the
+        process of monitoring, booking, and managing parking slots across different cities. It is designed
+        to serve both users and administrators with efficiency and clarity.
+    </p>
+
+    <h2>Purpose</h2>
+    <p>To reduce parking chaos by providing a centralized, real-time slot monitoring system — accessible anytime, from anywhere.</p>
+
+    <h2>Core Features</h2>
+    <ul>
+        <li>City-wise slot tracking and booking</li>
+        <li>Real-time display of available (vacant) slots only</li>
+        <li>Dynamic slot creation from file input</li>
+        <li>Admin-friendly code structure</li>
+    </ul>
+
+    <h2>Tech Stack</h2>
+    <ul>
+        <li><strong>Frontend:</strong> HTML, CSS (Dark theme with red & white contrast)</li>
+        <li><strong>Backend:</strong> Python (Flask framework)</li>
+        <li><strong>Storage:</strong> .txt files 
+        <li><strong>Rendering:</strong> Jinja2 templates</li>
+    </ul>
+
+    <h2>Developer</h2>
+    <p><strong>Name:</strong> M. Abdul Aejas<br>
+       <strong>Email:</strong> aejas.contact@email.com<br>
+       <strong>Phone:</strong> +91-98765-43210</p>
+
+    <div class="credit">
+        Designed with ❤ by <strong>M. Abdul Aejas</strong>
+
+    </div>
+    <br>
+    
+
+
+</body>
+</html>

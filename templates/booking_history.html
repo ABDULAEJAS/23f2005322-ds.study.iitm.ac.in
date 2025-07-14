@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking History</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      color: #e50914;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #444;
+      text-align: center;
+    }
+    th {
+      background-color: #1e1e1e;
+      color: #e50914;
+    }
+    tr:nth-child(even) {
+      background-color: #1a1a1a;
+    }
+    a {
+      color: #e50914;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+    <img src="{{ url_for('static', filename='logo.png.jpeg') }}" alt="Logo" style="width: 100px; height: 80">
+</head>
+<body>
+
+  <h1>📚 Booking History</h1>
+  <form method="get">
+  <label for="city">Select City:</label>
+  <select name="city" id="city" onchange="this.form.submit()">
+    <option value="">All Cities</option>
+    {% for city in cities %}
+      <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>{{ city }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+  {% if bookings %}
+  <table>
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>City</th>
+        <th>Vehicle</th>
+        <th>Slot No</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>User Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in bookings %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ b[0] }}</td>
+        <td>{{ b[1] }}</td>
+        <td>{{ b[2] }}</td>
+        <td>{{ b[3] }}</td>
+        <td>{{ b[4] }}</td>
+        <td>{{ b[5] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p>No booking records found.</p>
+  {% endif %}
+
+  <br><a href="/admin">← Back to Dashboard</a>
+
+</body>
+</html>

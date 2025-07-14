@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, jsonify
+from flask import Flask, render_template, request, redirect, session
 import os
 import datetime
 
@@ -9,18 +9,11 @@ SLOT_FILE = 'slots.txt'
 CITIES_FILE = 'cities.txt'
 BOOKINGS_FILE = 'bookings.txt'
 PAYMENTS_FILE = 'payments.txt'
-n = datetime.datetime.now()
-
 def read_lines(filename):
     if not os.path.exists(filename):
         return []
     with open(filename, 'r') as f:
         return [line.strip() for line in f if line.strip()]
-
-def get_cities():
-    if os.path.exists(CITIES_FILE):
-        with open(CITIES_FILE, 'r') as f:
-            return [line.strip() for line in f if line.strip()]
 
 def get_total_slots():
     try:
@@ -28,6 +21,12 @@ def get_total_slots():
     except:
         return 3
 
+
+def get_cities():
+    if os.path.exists(CITIES_FILE):
+        with open(CITIES_FILE, 'r') as f:
+            return [line.strip() for line in f if line.strip()]
+    return []
 @app.route('/')
 def home():
     return redirect('/signin')
@@ -48,6 +47,8 @@ def signup():
         return redirect('/signin')
     return render_template('signup.html')
 
+
+    return render_template('signin.html')@app.route('/signin', methods=['GET', 'POST'])
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
     if request.method == 'POST':
@@ -69,133 +70,43 @@ def signin():
                         if mail == email and pwd == password:
                             session['email'] = mail
                             session['name'] = name
-                            return redirect('/user')
+                            return redirect('/book')
                     except:
                         continue  # skip invalid lines
 
         return "Invalid login. <a href='/signin'>Try again</a>"
 
     return render_template('signin.html')
+    if request.method == 'POST':
+        email = request.form['email'].strip().lower()
+        password = request.form['password'].strip()
 
-@app.route('/user')
-def user_dashboard():
-    if 'email' not in session or session['email'] == 'owner@gmail.com':
-        return redirect('/signin')
-    return render_template('user.html', user_email=session['email'])
-@app.route('/user_chart')
-def user_chart():
-    if 'email' not in session or session['email'] == 'owner@gmail.com':
-        return redirect('/signin')
+        # Check admin login
+        if email == 'owner@gmail.com' and password == 'admin123':
+            session['email'] = email
+            return redirect('/admin')
 
-    email = session['email']
-    revenue_data = {}  # {city: total_revenue}
-
-    if os.path.exists('payments.txt'):
-        with open('payments.txt', 'r') as f:
-            for line in f:
-                parts = line.strip().split(',')
-                if len(parts) == 5 and parts[4] == email:
-                    city = parts[0]
-                    try:
-                        amount = int(parts[2])
-                        revenue_data[city] = revenue_data.get(city, 0) + amount
-                    except:
-                        continue
-
-    labels = list(revenue_data.keys())
-    values = list(revenue_data.values())
-
-    return render_template('user_chart.html', labels=labels, values=values)
-@app.route('/availability')
-def availability():
-    if 'email' not in session:
-        return redirect('/signin')
-
-    selected_city = request.args.get('city')  # From dropdown
-    cities = get_cities()  # Read from cities.txt
-    slots = {}
-
-    if selected_city:
-        slot_file = f'slots_{selected_city}.txt'
-        if os.path.exists(slot_file):
-            with open(slot_file, 'r') as sf:
-                try:
-                  total_slots = int(sf.read().strip())
-                except:
-                  total_slots = get_total_slots()
-    else:
-        total_slots = get_total_slots()
-    # Mark all as vacant initially
-    for i in range(1, total_slots + 1):
-        slots[str(i)] = "Vacant"
-
-        # Mark booked slots from bookings.txt
-        if os.path.exists('bookings.txt'):
-            with open('bookings.txt', 'r') as f:
+        # Check user login
+        if os.path.exists('users.txt'):
+            with open('users.txt', 'r') as f:
                 for line in f:
-                    parts = line.strip().split(',')
-                    if len(parts) >= 5 and parts[0] == selected_city:
-                        booked_slot = parts[2]
-                        booked_end = parts[4]
-                        try:
-                           booked_end_dt = datetime.datetime.strptime(booked_end, '%Y-%m-%d %H:%M')
-                           if booked_end_dt > n:
-                              slots[booked_slot] = "Booked"
-                        except:
-                            continue
-                        
+                    try:
+                        mail, pwd, name = line.strip().split(',')
+                        if mail == email and pwd == password:
+                            session['email'] = email
+                            return redirect('/book')
+                    except:
+                        continue  # skip any bad lines
 
-    return render_template('availability.html',
-                           cities=cities,
-                           selected_city=selected_city,
-                           slots=slots)
-
-@app.route('/user_history')
-def user_history():
-    if 'email' not in session:
-        return redirect('/signin')
-
-    email = session['email']
-    bookings = []
-    payments = []
-
-    # Booking data (city, vehicle, slot, start, end, email)
-    if os.path.exists('bookings.txt'):
-        with open('bookings.txt', 'r') as f:
-            for line in f:
-                parts = line.strip().split(',')
-                if len(parts) >= 6 and parts[5] == email:
-                    bookings.append(parts[:5])
-
-    # Payment data (city, vehicle, amount, date, email)
-    if os.path.exists('payments.txt'):
-        with open('payments.txt', 'r') as f:
-            for line in f:
-                parts = line.strip().split(',')
-                if len(parts) >= 5 and parts[4] == email:
-                    payments.append(parts[:4])
-
-    return render_template('user_history.html', bookings=bookings, payments=payments)
-
-@app.route('/user/book')
-def book_slot_redirect():
-    if 'email' not in session or session['email'] == 'owner@gmail.com':
-        return redirect('/signin')
-    return redirect('/book')
-
-@app.route('/about')
-def about():
-    if 'email' not in session or session['email'] == 'owner@gmail.com':
-        return redirect('/signin')
-    return render_template('about.html')
-
+        return "Invalid login. <a href='/signin'>Try again</a>"
 @app.route('/book', methods=['GET', 'POST'])
 def book():
     if 'email' not in session or session['email'] == 'owner@gmail.com':
         return redirect('/signin')
 
-    cities = get_cities()
     total_slots = get_total_slots()
+    cities = get_cities()
+
 
     if not cities:
         return "<h3 style='color: red;'>No cities available. Admin must add cities.</h3>"
@@ -219,7 +130,7 @@ def book():
                 for line in f:
                     parts = line.strip().split(',')
                     if len(parts) >= 5:
-                        booked_city, booked_vehicle, booked_slot, booked_start, booked_end, email = parts
+                        booked_city, booked_vehicle, booked_slot, booked_start, booked_end = parts
                         if city == booked_city and slot == booked_slot:
                             booked_start_dt = datetime.datetime.strptime(booked_start, '%Y-%m-%d %H:%M')
                             booked_end_dt = datetime.datetime.strptime(booked_end, '%Y-%m-%d %H:%M')
@@ -235,41 +146,8 @@ def book():
 
         return redirect('/payment')
 
+    
     return render_template('book.html', cities=cities, total_slots=total_slots)
-
-@app.route('/get_slots')
-def get_slots():
-    city = request.args.get('city')
-    slot_file = f'slots_{city}.txt'
-    try:
-        if city and os.path.exists(slot_file):
-            with open(slot_file, 'r') as sf:
-                total_slots = int(sf.read().strip())
-        else:
-            total_slots = get_total_slots()
-    except:
-        total_slots = 3
-
-    # Find booked slots for this city, only if booking end time is in the future
-    booked_slots = set()
-    if os.path.exists('bookings.txt'):
-        with open('bookings.txt', 'r') as f:
-            for line in f:
-                parts = line.strip().split(',')
-                if len(parts) >= 5 and parts[0] == city:
-                    booked_slot = parts[2]
-                    booked_end = parts[4]
-                    try:
-                        booked_end_dt = datetime.datetime.strptime(booked_end, '%Y-%m-%d %H:%M')
-                        if booked_end_dt > n:
-                            booked_slots.add(booked_slot)
-                    except:
-                        continue
-
-    available_slots = [str(i) for i in range(1, total_slots + 1) if str(i) not in booked_slots]
-
-    return jsonify({'available_slots': available_slots})
-
 @app.route('/payment', methods=['GET', 'POST'])
 def payment():
     if 'email' not in session or 'vehicle' not in session or 'slot' not in session:
@@ -307,7 +185,7 @@ def payment():
         if request.method == 'POST':
             # Save booking and payment
             with open('bookings.txt', 'a') as f:
-                f.write(f"{city},{vehicle},{slot},{start_dt.strftime('%Y-%m-%d %H:%M')},{end_dt.strftime('%Y-%m-%d %H:%M')},{email}\n")
+                f.write(f"{city},{vehicle},{slot},{start_dt.strftime('%Y-%m-%d %H:%M')},{end_dt.strftime('%Y-%m-%d %H:%M')}\n")
             with open('payments.txt', 'a') as p:
                 p.write(f"{city},{vehicle},{amount},{datetime.datetime.now().strftime('%Y-%m-%d %H:%M')},{email}\n")
 
@@ -327,7 +205,7 @@ def payment():
 
     except Exception as e:
         return f"<h3 style='color:red;'>Error: {e}</h3><a href='/book'>Back</a>"
-
+# ---------------------------------------------
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if 'email' not in session or session['email'] != 'owner@gmail.com':
@@ -375,7 +253,6 @@ def admin():
                            bookings=bookings,
                            payments=payments,
                            total_revenue=total_revenue)
-
 @app.route('/manage_cities', methods=['GET', 'POST'])
 def manage_cities():
     if 'email' not in session or session['email'] != 'owner@gmail.com':
@@ -442,68 +319,56 @@ def manage_cities():
         slot_data[city] = count
 
     return render_template('manage_cities.html', cities=cities, slot_data=slot_data)
-
-@app.route('/current_bookings')
+@app.route('/current_bookings', methods=['GET', 'POST'])
 def current_bookings():
     if 'email' not in session or session['email'] != 'owner@gmail.com':
         return redirect('/signin')
 
-    selected_city = request.args.get('city')
+    selected_city = None
+    slots_status = []  # [(slot_number, status), ...]
+
+    total_slots = get_total_slots()
+
+    # Load cities
     cities = get_cities()
-    slots_status = {}
 
-    if selected_city:
-        slot_file = f'slots_{selected_city}.txt'
-        if os.path.exists(slot_file):
-            with open(slot_file, 'r') as sf:
-                try:
-                    total_slots = int(sf.read().strip())
-                except:
-                    total_slots = 3
-        else:
-            total_slots = 3
+    # Load bookings
+    current_time = datetime.datetime.now()
+    all_bookings = []
+    if os.path.exists('bookings.txt'):
+        with open('bookings.txt', 'r') as f:
+            for line in f:
+                parts = line.strip().split(',')
+                if len(parts) >= 5:
+                    city, vehicle, slot, start_str, end_str = parts
+                    start = datetime.datetime.strptime(start_str, '%Y-%m-%d %H:%M')
+                    end = datetime.datetime.strptime(end_str, '%Y-%m-%d %H:%M')
+                    all_bookings.append((city, slot, start, end))
 
-        # Mark all as Vacant
-        for i in range(1, total_slots + 1):
-            slots_status[str(i)] = ("Vacant", "")
+    if request.method == 'POST':
+        selected_city = request.form.get('city')
 
-        # Mark booked slots and store vehicle
-        if os.path.exists('bookings.txt'):
-            with open('bookings.txt', 'r') as f:
-                for line in f:
-                    parts = line.strip().split(',')
-                    if len(parts) >= 6 and parts[0] == selected_city:
-                        booked_slot = parts[2]
-                        booked_vehicle = parts[1]
-                        booked_end = parts[4]
-                        try:
-                            booked_end_dt = datetime.datetime.strptime(booked_end, '%Y-%m-%d %H:%M')
-                            if booked_end_dt > datetime.datetime.now():
-                                slots_status[booked_slot] = ("Booked", booked_vehicle)
-                        except:
-                            continue
+    for i in range(1, total_slots + 1):
+        status = 'Vacant'
+        for booking in all_bookings:
+            b_city, b_slot, b_start, b_end = booking
+            if b_city == selected_city and b_slot == str(i) and b_start <= current_time <= b_end:
+                status = 'Booked'
+                break
+        slots_status.append((i, status))
 
-    return render_template('current_bookings.html',
-                           cities=cities,
-                           selected_city=selected_city,
-                           slots_status=slots_status)
+    return render_template('current_bookings.html', cities=cities, selected_city=selected_city, slots_status=slots_status)
 @app.route('/booking_history')
 def booking_history():
     if session.get('email') != 'owner@gmail.com':
         return redirect('/signin')
 
-    selected_city = request.args.get('city')
-    cities = get_cities()
     bookings = []
     if os.path.exists('bookings.txt'):
         with open('bookings.txt', 'r') as f:
-            for line in f:
-                parts = line.strip().split(',')
-                if len(parts) >= 6:
-                    if not selected_city or parts[0] == selected_city:
-                        bookings.append(parts[:6])
+            bookings = [line.strip().split(',') for line in f if line.strip()]
 
-    return render_template('booking_history.html', bookings=bookings, cities=cities, selected_city=selected_city)
+    return render_template('booking_history.html', bookings=bookings)
 @app.route('/payment_history')
 def payment_history():
     if 'email' not in session:
@@ -512,18 +377,14 @@ def payment_history():
     if session['email'] != 'owner@gmail.com':
         return "Access Denied"
 
-    selected_city = request.args.get('city')
-    cities = get_cities()
     payments = []
     if os.path.exists('payments.txt'):
         with open('payments.txt', 'r') as f:
             for line in f:
                 parts = line.strip().split(',')
                 if len(parts) == 5:
-                    if not selected_city or parts[0] == selected_city:
-                        payments.append(parts)
-    return render_template('payment_history.html', payments=payments, cities=cities, selected_city=selected_city)         
-
+                    payments.append(parts)
+    return render_template('payment_history.html', payments=payments)                
 @app.route('/api/add_city', methods=['POST'])
 def add_city():
     city = request.json.get('city')
@@ -540,6 +401,7 @@ def add_city():
 
     return jsonify(success=True)                    
 
+    return render_template('payment_history.html', payments=payments)
 @app.route('/chart')
 def chart():
     if 'email' not in session or session['email'] != 'owner@gmail.com':
@@ -564,10 +426,10 @@ def chart():
 
     return render_template('chart.html', labels=labels, values=values)
 
+
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect('/signin')
-
 if __name__ == '__main__':
     app.run(debug=True)

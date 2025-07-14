@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Slot Availability</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+    h1 {
+      color: #e50914;
+      margin-bottom: 20px;
+    }
+    select, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-right: 10px;
+      border-radius: 8px;
+      border: 1px solid #e50914;
+      background-color: #1e1e1e;
+      color: white;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #e50914;
+    }
+    th {
+      background-color: #1e1e1e;
+    }
+    .vacant {
+      color: lightgreen;
+      font-weight: bold;
+    }
+    .booked {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+    <img src="{{ url_for('static', filename='logo.png.jpeg') }}" alt="Logo" style="width: 100px; height: 80">
+</head>
+<body>
+  <h1>📌 Slot Availability</h1>
+
+  <form method="GET" action="/availability">
+    <label for="city">Select City:</label>
+    <select name="city" id="city" required>
+      {% for city in cities %}
+        <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>{{ city }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Check</button>
+  </form>
+
+  {% if slots %}
+    <table>
+      <tr>
+        <th>Slot Number</th>
+        <th>Status</th>
+      </tr>
+      {% for slot, status in slots.items() %}
+        <tr>
+          <td>{{ slot }}</td>
+          <td class="{{ status|lower }}">{{ status }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% elif selected_city %}
+    <p>No data available for {{ selected_city }}</p>
+  {% endif %}
+  <a href="/user">← Back to Dashboard</a>
+
+</body>
+</html>

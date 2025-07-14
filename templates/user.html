@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Dashboard</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #e50914;
+      margin-bottom: 40px;
+    }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-button {
+      background-color: #1e1e1e;
+      color: white;
+      border: 2px solid #e50914;
+      padding: 15px 30px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 20px;
+      width: 300px;
+      transition: 0.3s;
+    }
+
+    .nav-button:hover {
+      background-color: #e50914;
+      color: black;
+      font-weight: bold;
+    }
+
+
+  </style>
+    <img src="{{ url_for('static', filename='logo.png.jpeg') }}" alt="Logo" style="width: 100px; height: 80">
+</head>
+<body>
+
+  <h1>🚗 Welcome, {{ session['email'] }}</h1>
+
+  <div class="button-container">
+    <a class="nav-button" href="/book">📅 Book a Slot</a>
+    <a class="nav-button" href="/availability">🟢 Slot Availability</a>
+    <a class="nav-button" href="/user_history">📜 My Booking History</a>
+    <a class="nav-button" href="/user_chart">📊 Payment stats</a>
+    <a class="nav-button" href="/about">ℹ About Us</a>
+    <a class="nav-button" href="/logout">🚪 Logout</a>
+  </div>
+
+  
+
+</body>
+</html>
