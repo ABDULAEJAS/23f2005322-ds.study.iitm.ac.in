@@ -44,29 +44,42 @@ HOW TO RUN
 ADMIN CREDENTIALS
 =====================
 - Email: owner@gmail.com
-- Password: You will set during signup
+- Password: admin123
 
 =====================
 FOLDER STRUCTURE
 =====================
-parking-lot-project/
-│
-├── app.py
-├── users.txt
-├── bookings.txt
-├── payments.txt
-├── slots.txt
-│
-├── templates/
-│   ├── signin.html
-│   ├── signup.html
-│   ├── book.html
-│   ├── admin.html
-│   └── check.html
+/parking-management/
 │
 ├── static/
-    ├── style.css
-    └── images/
+│   └── image/
+│       └── (your image files here)
+│
+├── templates/
+│   ├── about.html
+│   ├── admin.html
+│   ├── availability.html
+│   ├── book.html
+│   ├── booking_history.html
+│   ├── chart.html
+│   ├── current_bookings.html
+│   ├── manage_cities.html
+│   ├── payment.html
+│   ├── payment_history.html
+│   ├── signin.html
+│   ├── signup.html
+│   ├── user.html
+│   ├── user_chart.html
+│   └── user_history.html
+│
+├── app.py
+├── Users.txt
+├── Cities.txt
+├── Bookings.txt
+├── Current_bookings.txt
+├── Slots_<city_name>.txt  # (e.g., Slots_Chennai.txt, Slots_Mumbai.txt)
+│
+└── README.md
 
 =====================
 NOTES
